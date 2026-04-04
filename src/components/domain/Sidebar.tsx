@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ClipboardList, Car, Users, Settings, Wrench, BookOpen } from 'lucide-react'
+import { NavLink, Link } from 'react-router-dom'
+import { LayoutDashboard, ClipboardList, Car, Users, Settings, Wrench, BookOpen, ShoppingBag } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const activeNavItems = [
@@ -69,6 +69,18 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Shop link */}
+      <div className="border-t p-3">
+        <Link
+          to="/shop"
+          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+        >
+          <ShoppingBag className="h-4 w-4" />
+          <span>Parts Shop</span>
+          <span className="ml-auto text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Shop</span>
+        </Link>
+      </div>
 
       {/* Footer */}
       <div className="border-t p-4">

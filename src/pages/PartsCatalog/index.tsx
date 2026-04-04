@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { partsCatalog, getAllParts, findSubcategory, findPartByNumber } from '@/data/partsCatalog'
 import type { CatalogPart, StockStatus } from '@/data/partsCatalog'
 import { CategoryTree } from '@/components/domain/CategoryTree'
@@ -215,6 +215,14 @@ export default function PartsCatalog() {
                               <Clock className="h-3 w-3" />
                               {part.leadTimeDays}d lead time
                             </div>
+                          )}
+                          {(part.stockStatus === 'low_stock' || part.stockStatus === 'out_of_stock') && (
+                            <Link
+                              to={`/shop?q=${encodeURIComponent(part.partNumber)}`}
+                              className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                            >
+                              Order from shop →
+                            </Link>
                           )}
                         </div>
                         <div>

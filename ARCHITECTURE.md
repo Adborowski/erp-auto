@@ -208,6 +208,50 @@ A summary of every production dependency and why it was chosen.
 
 ---
 
+---
+
+## 18. Shop Surface: Platform Architecture in Practice
+
+**Decision:** The Parts Shop is a second product surface built on top of the same platform layer as the ERP, demonstrating the "component and platform approach" explicitly.
+
+The layer separation is structural:
+
+```
+src/components/
+  ui/       ← platform — Button, Card, Badge, Separator, Sonner (shared by both surfaces)
+  domain/   ← ERP surface — StatusBadge, StatusPipeline, CategoryTree, Sidebar
+  shop/     ← (future) shop-specific components — ProductCard, CartDrawer live in layouts for now
+src/layouts/
+  ERPLayout.tsx   ← sidebar shell
+  ShopLayout.tsx  ← top-bar shell with cart drawer
+```
+
+`domain/` and shop components never import from each other. Both import from `ui/`. Swapping the design system touches only `ui/` — both surfaces update.
+
+The shop reuses `partsCatalog.ts` data directly — the ERP catalog and the shop sell the same parts. This is the cross-module link the JD asks for: a parts manager sees low-stock items in the ERP catalog with an "Order from shop →" link; the shop is the channel through which those parts are restocked.
+
+`CartContext` is shop-only state. It sits inside `CartProvider` which wraps only the shop routes, making it impossible for ERP pages to accidentally depend on cart state.
+
+**Not chosen: Separate repository / micro-frontend**
+A separate repo would make the shared-platform story invisible — an interviewer can't see the `ui/` layer being shared if the code lives elsewhere. A micro-frontend architecture (Module Federation) adds significant build complexity with no benefit at this scale. The monorepo approach with layout-level route splitting is the right tradeoff: one codebase, clearly separated surfaces.
+
+---
+
+## 19. Shop Checkout: State Passed via Router, Not Context
+
+**Decision:** The order confirmation page receives its data (`orderNumber`, `total`, `items`) via React Router's location state (`navigate('/shop/order-confirmed', { state: { ... } })`), not via a separate context or global store.
+
+This is the correct pattern for one-time, transitional state — data that is meaningful at exactly one point in a user journey and has no reason to persist beyond it. Once the user leaves the confirmation page, the data is gone. If they navigate back, they're redirected to the shop. This is honest: an order that has been placed and cleared from the cart should not be reconstructable from frontend state.
+
+The alternative — storing the last order in a `LastOrderContext` — would require remembering to clear it, deciding when it expires, and handling the edge case of a user opening two tabs and placing two orders. Routing state sidesteps all of that.
+
+The checkout's `clearCart()` call happens before navigation, so there's no race between the cart clearing and the confirmation page reading the items. The items snapshot passed to the confirmation page is taken from the cart at submit time.
+
+**Not chosen: Dedicated order history state**
+A real e-commerce system would persist completed orders in a database and expose an order history page. In this demo there's no backend, and adding a frontend-only order history (accumulated in context) would be misleading — it would reset on refresh and suggest persistence that doesn't exist. The confirmation page is deliberately the end of the road.
+
+---
+
 # Plans for the Future
 
 This section describes how each demo-specific decision would evolve in a production system — what technologies would be introduced, why, and what would change in the codebase.

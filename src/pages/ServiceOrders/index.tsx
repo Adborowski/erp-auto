@@ -138,7 +138,7 @@ export default function ServiceOrders() {
 
   return (
     <div className="flex-1 overflow-auto bg-slate-50">
-      <div className="border-b bg-white px-8 py-5 flex items-center justify-between">
+      <div className="border-b bg-white px-4 sm:px-8 py-5 flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold text-slate-900">Service Orders</h1>
           <p className="text-sm text-slate-500 mt-0.5">{orders.length} total orders</p>
@@ -152,10 +152,10 @@ export default function ServiceOrders() {
         </Link>
       </div>
 
-      <div className="px-8 py-6 pb-10 space-y-4">
+      <div className="px-4 sm:px-8 py-6 pb-10 space-y-4">
         {/* Search + filter */}
         <div className="flex items-center gap-4">
-          <div className="relative w-72">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
@@ -213,7 +213,7 @@ export default function ServiceOrders() {
         </div>
 
         {/* Table */}
-        <div className="rounded-lg border bg-white overflow-hidden">
+        <div className="rounded-lg border bg-white overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50">

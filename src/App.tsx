@@ -11,6 +11,7 @@ import NewServiceOrder from '@/pages/NewServiceOrder'
 import Customers from '@/pages/Customers'
 import CustomerDetail from '@/pages/CustomerDetail'
 import PartsCatalog from '@/pages/PartsCatalog'
+import DesignSystem from '@/pages/DesignSystem'
 import Shop from '@/pages/Shop'
 import Cart from '@/pages/Shop/Cart'
 import Checkout from '@/pages/Shop/Checkout'
@@ -30,6 +31,7 @@ function App() {
               <Route path="/customers" element={<Customers />} />
               <Route path="/customers/:id" element={<CustomerDetail />} />
               <Route path="/parts-catalog" element={<PartsCatalog />} />
+              <Route path="/design-system" element={<DesignSystem />} />
             </Route>
             <Route element={<ShopLayout />}>
               <Route path="/shop" element={<Shop />} />

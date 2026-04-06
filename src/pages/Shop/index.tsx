@@ -7,7 +7,7 @@ import { formatCurrency, cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import {
   Search, ShoppingCart, CheckCircle2, AlertTriangle, XCircle,
-  Wrench, Building2, Tag, Layers,
+  Wrench, Building2, Tag, Layers, SlidersHorizontal, X,
 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
@@ -163,6 +163,7 @@ export default function Shop() {
   const [search, setSearch]           = useState(initialSearch)
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>(null)
   const [stockFilter, setStockFilter] = useState<StockFilter>('all')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const allParts = useMemo(() => getAllParts(partsCatalog), [])
 
@@ -213,47 +214,79 @@ export default function Shop() {
     }, { replace: true })
   }
 
+  function handleCategorySelect(id: CategoryFilter) {
+    setCategoryFilter(id)
+    setFiltersOpen(false)
+  }
+
+  const filterPanel = (
+    <>
+      <div className="border-b px-4 py-4 flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Categories</p>
+        <button onClick={() => setFiltersOpen(false)} className="sm:hidden text-slate-400 hover:text-slate-700 transition-colors">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="flex-1 p-3 overflow-y-auto">
+        <CategorySidebar selected={categoryFilter} onSelect={handleCategorySelect} />
+      </div>
+      <div className="border-t p-3 space-y-1">
+        <p className="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Availability</p>
+        {([
+          ['all',        'All items'],
+          ['available',  'In / low stock'],
+          ['low_stock',  'Needs restocking'],
+        ] as [StockFilter, string][]).map(([value, label]) => (
+          <button
+            key={value}
+            onClick={() => setStockFilter(value)}
+            className={cn(
+              'flex w-full items-center rounded-md px-3 py-1.5 text-xs transition-colors text-left',
+              stockFilter === value ? 'bg-slate-900 text-white font-medium' : 'text-slate-500 hover:bg-slate-100',
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </>
+  )
+
   return (
     <div className="flex flex-1 overflow-hidden">
-      {/* Category sidebar */}
-      <aside className="flex w-56 flex-col border-r bg-white overflow-y-auto flex-shrink-0">
-        <div className="border-b px-4 py-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Categories</p>
-        </div>
-        <div className="flex-1 p-3 overflow-y-auto">
-          <CategorySidebar selected={categoryFilter} onSelect={id => { setCategoryFilter(id) }} />
-        </div>
+      {/* Mobile filter backdrop */}
+      {filtersOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 sm:hidden"
+          onClick={() => setFiltersOpen(false)}
+        />
+      )}
 
-        {/* Stock filter */}
-        <div className="border-t p-3 space-y-1">
-          <p className="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Availability</p>
-          {([
-            ['all',        'All items'],
-            ['available',  'In / low stock'],
-            ['low_stock',  'Needs restocking'],
-          ] as [StockFilter, string][]).map(([value, label]) => (
-            <button
-              key={value}
-              onClick={() => setStockFilter(value)}
-              className={cn(
-                'flex w-full items-center rounded-md px-3 py-1.5 text-xs transition-colors text-left',
-                stockFilter === value ? 'bg-slate-900 text-white font-medium' : 'text-slate-500 hover:bg-slate-100',
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+      {/* Category sidebar — always visible on sm+, drawer on mobile */}
+      <aside className={cn(
+        'flex w-56 flex-shrink-0 flex-col border-r bg-white overflow-y-auto',
+        'fixed inset-y-0 left-0 z-50 transition-transform duration-300',
+        'sm:static sm:translate-x-0',
+        filtersOpen ? 'translate-x-0' : '-translate-x-full',
+      )}>
+        {filterPanel}
       </aside>
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="border-b bg-white px-6 py-4 flex items-center gap-4">
-          <p className="text-sm text-slate-500">
+        <div className="border-b bg-white px-4 sm:px-6 py-4 flex items-center gap-3">
+          <button
+            onClick={() => setFiltersOpen(true)}
+            className="sm:hidden flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors flex-shrink-0"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            Filters
+          </button>
+          <p className="text-sm text-slate-500 hidden sm:block">
             <span className="font-medium text-slate-900">{filtered.length}</span> parts
           </p>
-          <div className="relative ml-auto w-72">
+          <div className="relative ml-auto w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
@@ -266,14 +299,14 @@ export default function Shop() {
         </div>
 
         {/* Product grid */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-slate-400">
               <Wrench className="h-10 w-10 mb-3 opacity-30" />
               <p className="text-sm">No parts found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
               {filtered.map(part => (
                 <ProductCard key={part.id} part={part} />
               ))}

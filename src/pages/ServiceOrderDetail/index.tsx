@@ -59,7 +59,7 @@ export default function ServiceOrderDetail() {
   return (
     <div className="flex-1 overflow-auto bg-slate-50">
       {/* Header */}
-      <div className="bg-white border-b px-8 py-4">
+      <div className="bg-white border-b px-4 sm:px-8 py-4">
         <button
           onClick={() => navigate('/service-orders')}
           className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-3 transition-colors"
@@ -68,7 +68,7 @@ export default function ServiceOrderDetail() {
           Back to orders
         </button>
 
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-semibold text-slate-900">{order.orderNumber}</h1>
@@ -91,7 +91,7 @@ export default function ServiceOrderDetail() {
         </div>
       </div>
 
-      <div className="px-8 py-6 space-y-6 pb-10">
+      <div className="px-4 sm:px-8 py-6 space-y-6 pb-10">
         {/* Status pipeline */}
         <Card>
           <CardHeader>
@@ -102,7 +102,7 @@ export default function ServiceOrderDetail() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Vehicle info */}
           <Card>
             <CardHeader className="pb-2">
@@ -183,7 +183,7 @@ export default function ServiceOrderDetail() {
         </div>
 
         {/* Labor & Parts */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Labor */}
           <Card>
             <CardHeader className="pb-2">

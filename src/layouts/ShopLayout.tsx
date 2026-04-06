@@ -22,7 +22,7 @@ function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 
       {/* Drawer */}
       <div className={cn(
-        'fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300',
+        'fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300',
         open ? 'translate-x-0' : 'translate-x-full',
       )}>
         {/* Header */}
@@ -158,7 +158,7 @@ export function ShopLayout() {
         </div>
 
         {/* Center: nav links */}
-        <nav className="flex items-center gap-6">
+        <nav className="hidden sm:flex items-center gap-6">
           <Link to="/shop" className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
             All Parts
           </Link>

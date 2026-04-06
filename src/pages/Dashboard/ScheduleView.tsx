@@ -178,7 +178,7 @@ export default function ScheduleView() {
       </div>
 
       {/* Grid */}
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white overflow-x-auto">
         {/* Header row */}
         <div className="flex border-b bg-slate-50">
           <div className="flex-shrink-0 border-r px-4 py-3" style={{ width: LABEL_W }}>

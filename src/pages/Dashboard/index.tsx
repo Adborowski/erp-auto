@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex-1 overflow-auto bg-slate-50">
-      <div className="border-b bg-white px-8 py-5 flex items-center justify-between">
+      <div className="border-b bg-white px-4 sm:px-8 py-5 flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold text-slate-900">Dashboard</h1>
           <p className="text-sm text-slate-500 mt-0.5">Workshop overview · Today</p>
@@ -52,12 +52,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="px-8 py-6 space-y-6 pb-10">
+      <div className="px-4 sm:px-8 py-6 space-y-6 pb-10">
         {tab === 'schedule' && <ScheduleView />}
         {tab === 'overview' && <>
 
         {/* KPI cards */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-500">Active Orders</CardTitle>
@@ -103,9 +103,9 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Chart */}
-          <Card className="col-span-2">
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="text-sm font-medium text-slate-700">Orders by Status</CardTitle>
             </CardHeader>
@@ -137,7 +137,7 @@ export default function Dashboard() {
           </Card>
 
           {/* Recent orders */}
-          <Card className="col-span-3">
+          <Card className="lg:col-span-3">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium text-slate-700">Recent Service Orders</CardTitle>
               <Link
